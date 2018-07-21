@@ -1,14 +1,14 @@
 import os
 
-from flask import Flask
+from flask import Flask, send_from_directory
 
 
 def create_app(test_config=None):
   # create and configure the app
-  app = Flask(__name__, instance_relative_config=True)\
+  app = Flask(__name__, instance_relative_config=True)
   app.config.from_mapping(
     SECRET_KEY='dev',
-    DATABASE=os.path.join(app.instance_path, 'pillager.sqlite'),
+    DATABASE=os.path.join(app.instance_path, 'pillager.sqlite')
   )
 
   if test_config is None:
@@ -24,9 +24,16 @@ def create_app(test_config=None):
   except OSError:
     pass
 
-  # a simple page that says hello
   @app.route('/hello')
   def hello():
     return 'Hello, World!'
+
+  @app.route('/')
+  def index():
+    return send_from_directory('static', 'index.html')
+
+  @app.route('/<path:path>')
+  def send_static(path):
+    return send_from_directory('static', path)
 
   return app
