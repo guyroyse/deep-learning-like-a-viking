@@ -1,88 +1,133 @@
-document.addEventListener('DOMContentLoaded', function () {
+class App {
+  constructor() {
+    document.addEventListener('DOMContentLoaded', _ => this.onDocumentLoaded())
+  }
 
-  let canvas = document.getElementById('canvas');
-  let otherCanvas = document.getElementById('otherCanvas');
+  onDocumentLoaded() {
+    this.bindElements()
+    this.bindEvents()
+  }
 
-  let save = document.getElementById('save');
+  bindElements() {
+    this.drawingCanvas = document.getElementById('canvas')
+    this.scalingCanvas = document.getElementById('otherCanvas')
+    this.saveButton = document.getElementById('save')
+    this.clearButton = document.getElementById('clear')
+    this.runicCanvas = new RunicCanvas(this.drawingCanvas, this.scalingCanvas)
+  }
 
-  let context = canvas.getContext('2d');
+  bindEvents() {
+    this.saveButton.addEventListener('click', _ => this.onSaveClicked())
+    this.clearButton.addEventListener('click', _ => this.onClearClicked())
+  }
 
-  let otherContext = otherCanvas.getContext('2d');
-  otherContext.scale(1, 1);
+  onSaveClicked() {
+    this.runicCanvas.fetchResults()
+      .then(alphaMatrix => console.log(alphaMatrix))
+  }
 
-  context.lineWidth = 20;
-  context.lineCap = 'round';
+  onClearClicked() {
+    this.runicCanvas.clear()
+  }
+}
 
-  let prevX = null;
-  let prevY = null;
-  let drawing = false;
+class RunicCanvas {
+  constructor(drawingCanvas, scalingCanvas) {
+    this.drawingCanvas = drawingCanvas
+    this.drawingContext = drawingCanvas.getContext('2d')
+    this.drawingContext.lineWidth = 20
+    this.drawingContext.lineCap = 'round'
 
-  canvas.addEventListener('mousedown', function(event) {
-    drawing = true;
-    let currentX = event.clientX - canvas.offsetLeft - 1;
-    let currentY = event.clientY - canvas.offsetTop - 1;
+    this.scalingContext = scalingCanvas.getContext('2d')
+    this.scalingContext.scale(0.1, 0.1);
 
-    context.beginPath();
-    context.moveTo(currentX, currentY);
+    this.prevX = null;
+    this.prevY = null;
+    this.drawing = false;
 
-    prevX = event.clientX - canvas.offsetLeft - 1;
-    prevY = event.clientY - canvas.offsetTop - 1;
-  });
+    this.bindEvents()
+  }
 
-  canvas.addEventListener('mousemove', function(event) {
+  bindEvents() {
+    this.drawingCanvas.addEventListener('mousedown',
+      event => this.onMouseEvent(event, 'onMouseDown'))
 
-    if (drawing) {
-      let currentX = event.clientX - canvas.offsetLeft - 1;
-      let currentY = event.clientY - canvas.offsetTop - 1;
+    this.drawingCanvas.addEventListener('mousemove',
+      event => this.onMouseEvent(event, 'onMouseMove'))
 
-      context.lineTo(currentX, currentY);
-      context.stroke();
+    this.drawingCanvas.addEventListener('mouseup',
+      event => this.onMouseEvent(event, 'onMouseUp'))
+  }
 
-      prevX = currentX;
-      prevY = currentY;
+  onMouseEvent(event, handlerName) {
+    let x = event.clientX - this.drawingCanvas.offsetLeft - 1
+    let y = event.clientY - this.drawingCanvas.offsetTop - 1
+    this[handlerName](x, y)
+  }
+
+  onMouseDown(x, y) {
+    this.drawing = true
+    this.drawingContext.beginPath()
+    this.drawingContext.moveTo(x, y)
+    this.prevX = x, this.prevY = y
+  }
+
+  onMouseMove(x, y) {
+    if (this.drawing) {
+      this.drawingContext.lineTo(x, y)
+      this.drawingContext.stroke()
+      this.prevX = x, this.prevY = y
     }
+  }
 
-  });
+  onMouseUp(x, y) {
+    this.drawingContext.lineTo(x, y)
+    this.drawingContext.stroke()
+    this.prevX = x, this.prevY = y
+    this.drawing = false
+  }
 
-  canvas.addEventListener('mouseup', function(event) {
-    let currentX = event.clientX - canvas.offsetLeft - 1;
-    let currentY = event.clientY - canvas.offsetTop - 1;
+  clear() {
+    this.drawingContext.clearRect(0, 0, 240, 240)
+    this.scalingContext.clearRect(0, 0, 240, 240)
+  }
 
-    context.lineTo(currentX, currentY);
-    context.stroke();
+  fetchResults() {
+    return this.fetchScaledImageData()
+      .then(scaledImageData => {
+        let rawData = [...scaledImageData.data]
+        console.log("Raw data", rawData)
 
-    drawing = false;
-    prevX = null;
-    prevY = null;
-  });
+        let alphaData = rawData.filter((_, index) => (index + 1) % 4 === 0)
+        console.log("Alpha data", alphaData)
 
-  save.addEventListener('click', function() {
-    let imageData = context.getImageData(0, 0, 240, 240);
-    console.log(imageData);
+        let alphaMatrix = this.convertToMatrix(alphaData)
+        console.log("Alpha matrix", alphaMatrix)
 
-    createImageBitmap(imageData).then(function(imageBitmap) {
-      console.log("promise resolved");
-      otherContext.scale(0.1, 0.1);
-      otherContext.drawImage(imageBitmap, 0, 0);
+        return alphaMatrix
+      })
+  }
 
-      console.log("url", otherCanvas.toDataURL());
-      let otherImageData = otherContext.getImageData(0, 0, 24, 24);
-      console.log(otherImageData);
+  fetchScaledImageData() {
+    let imageData = this.drawingContext.getImageData(0, 0, 240, 240)
+    console.log("Image data", imageData)
 
-      let rawData = [...otherImageData.data];
-      let theAlpha = rawData.filter((_, index) => (index + 1) % 4 === 0);
-      console.log(theAlpha);
+    return createImageBitmap(imageData)
+      .then(imageBitmap => {
+        this.scalingContext.drawImage(imageBitmap, 0, 0)
+        let scaledImageData = this.scalingContext.getImageData(0, 0, 24, 24)
+        console.log("Scaled image data", scaledImageData)
+        return scaledImageData
+      })
+  }
 
-      let theMatrix = new Array(24)
-        .fill() // make the empty array mappable
-        .map((value, index) => {
-          return theAlpha.slice(index * 24, (index + 1) * 24)
-        });
-
-      console.log(theMatrix);
-
-    });
-
-  });
-
-});
+  convertToMatrix(data) {
+    return new Array(24)
+      .fill()
+      .map((_, index) => {
+        let start = index * 24
+        let end = (index + 1) * 24
+        return data.slice(start, end)
+      })
+  }
+}
