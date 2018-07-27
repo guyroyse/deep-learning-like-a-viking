@@ -1,12 +1,16 @@
 import os
 
 from flask import Flask, send_from_directory
+from . import db
+from . import rune
 
 def create_app(test_config=None):
   app = Flask(__name__, instance_relative_config=True)
   config_app(app, test_config)
   create_instance_folder(app)
   setup_static_routes(app)
+  setup_database(app)
+  app.register_blueprint(rune.bp)
   return app
 
 def config_app(app, test_config):
@@ -35,3 +39,5 @@ def setup_static_routes(app):
   def send_static(path):
     return send_from_directory('static', path)
 
+def setup_database(app):
+  db.init_app(app)

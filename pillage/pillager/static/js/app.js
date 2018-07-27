@@ -9,11 +9,13 @@ class App {
   }
 
   bindElements() {
+    this.runicElement = document.getElementById('rune')
     this.drawingCanvas = document.getElementById('canvas')
     this.scalingCanvas = document.getElementById('otherCanvas')
     this.saveButton = document.getElementById('save')
     this.clearButton = document.getElementById('clear')
     this.runicCanvas = new RunicCanvas(this.drawingCanvas, this.scalingCanvas)
+    this.randomRune = new RandomRune(this.runicElement)
   }
 
   bindEvents() {
@@ -23,12 +25,73 @@ class App {
 
   onSaveClicked() {
     this.runicCanvas.fetchResults()
-      .then(alphaMatrix => console.log(alphaMatrix))
+      .then(alphaMatrix => {
+        return fetch('/rune/save', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          body: JSON.stringify({
+            rune: this.randomRune.runeName,
+            data: alphaMatrix
+          })
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        this.runicCanvas.clear()
+        this.randomRune.randomize()
+      })
   }
 
   onClearClicked() {
     this.runicCanvas.clear()
   }
+}
+
+class RandomRune {
+  constructor(runicElement) {
+    this.runicElement = runicElement
+    this.runes = [
+      { rune: "ᚠ", name: "fe" },
+      { rune: "ᚢ", name: "ur" },
+      { rune: "ᚦ", name: "thurs" },
+      { rune: "ᚬ", name: "as" },
+      { rune: "ᚱ", name: "reith" },
+      { rune: "ᚴ", name: "kaun" },
+      { rune: "ᚼ", name: "hagall" },
+      { rune: "ᚾ", name: "nauthr" },
+      { rune: "ᛁ", name: "isa" },
+      { rune: "ᛅ", name: "ar" },
+      { rune: "ᛋ", name: "sol" },
+      { rune: "ᛏ", name: "tyr" },
+      { rune: "ᛒ", name: "bjork" },
+      { rune: "ᛘ", name: "mathr" },
+      { rune: "ᛚ", name: "logr" },
+      { rune: "ᛦ", name: "yr" }
+    ]
+
+    this.randomize()
+  }
+
+  get rune() {
+    return this.runes[this.currentRune].rune
+  }
+
+  get runeName() {
+    return this.runes[this.currentRune].name
+  }
+
+  randomize() {
+    this.currentRune = this.getRandomInt(16)
+    this.runicElement.innerHTML = this.rune
+  }
+
+  getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(max))
+  }
+
 }
 
 class RunicCanvas {

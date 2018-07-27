@@ -7,3 +7,21 @@
 #otherCanvas {
   display: none;
 }
+
+#rune {
+  border: 2px solid black;
+  width: 240px;
+  text-align: center;
+  font-size: 48px;
+  margin-bottom: 12px;
+}
+
+#buttons {
+  width: 240px;
+  text-align: center;
+  margin-top: 12px;
+}
+
+#buttons button {
+  font-size: 24px;
+}
