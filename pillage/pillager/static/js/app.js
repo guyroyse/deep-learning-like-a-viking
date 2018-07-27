@@ -64,6 +64,23 @@ document.addEventListener('DOMContentLoaded', function () {
       console.log("promise resolved");
       otherContext.scale(0.1, 0.1);
       otherContext.drawImage(imageBitmap, 0, 0);
+
+      console.log("url", otherCanvas.toDataURL());
+      let otherImageData = otherContext.getImageData(0, 0, 24, 24);
+      console.log(otherImageData);
+
+      let rawData = [...otherImageData.data];
+      let theAlpha = rawData.filter((_, index) => (index + 1) % 4 === 0);
+      console.log(theAlpha);
+
+      let theMatrix = new Array(24)
+        .fill() // make the empty array mappable
+        .map((value, index) => {
+          return theAlpha.slice(index * 24, (index + 1) * 24)
+        });
+
+      console.log(theMatrix);
+
     });
 
   });

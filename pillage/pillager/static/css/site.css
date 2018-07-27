@@ -3,3 +3,7 @@
   height: 240px;
   width: 240px;
 }
+
+#otherCanvas {
+  display: none;
+}
