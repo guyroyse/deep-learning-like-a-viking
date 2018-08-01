@@ -43,6 +43,12 @@ section.has-light-background {
 	}
 }
 
+section.has-dark-background {
+	img {
+		background: #000 !important;
+	}
+}
+
 
 // Theme template ------------------------------
 @import "../template/theme";
