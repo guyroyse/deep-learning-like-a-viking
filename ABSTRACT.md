@@ -8,7 +8,7 @@ system of writing that we, in modern times, have dubbed the Younger Futhark (or
 have been mimicked in fantasy literature and role-playing games for decades.
 
 Of course, having an alphabet, runic or otherwise, solves lots of problems.
-But, it also introduces others. The vikings had the same problem we do today.
+But, it also introduces others. The Vikings had the same problem we do today.
 How were they to get their automated software systems to recognize the
 hand-carved input of a typical boatman? Of course, they were never able to
 solve this problem and were instead forced into a life of burning and
