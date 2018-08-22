@@ -2,3 +2,4 @@ venv/
 .vscode/
 instance/
 __pycache__/
+data
