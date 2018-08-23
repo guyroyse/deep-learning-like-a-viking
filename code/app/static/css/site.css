@@ -1,3 +1,13 @@
+body {
+  max-width: 244px;
+  margin: auto;
+  margin-top: 50px;
+}
+
+h1 {
+  text-align: center;
+}
+
 #canvasBorder {
   border: 2px solid black;
   height: 240px;
@@ -23,5 +33,5 @@
 }
 
 #buttons button {
-  font-size: 24px;
+  font-size: 18px;
 }

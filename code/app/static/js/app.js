@@ -12,15 +12,21 @@ class App {
     this.runicElement = document.getElementById('rune')
     this.drawingCanvas = document.getElementById('canvas')
     this.scalingCanvas = document.getElementById('otherCanvas')
-    this.saveButton = document.getElementById('save')
     this.clearButton = document.getElementById('clear')
+    this.saveButton = document.getElementById('save')
+    this.detectButton = document.getElementById('detect')
     this.runicCanvas = new RunicCanvas(this.drawingCanvas, this.scalingCanvas)
     this.randomRune = new RandomRune(this.runicElement)
   }
 
   bindEvents() {
-    this.saveButton.addEventListener('click', _ => this.onSaveClicked())
     this.clearButton.addEventListener('click', _ => this.onClearClicked())
+    this.saveButton.addEventListener('click', _ => this.onSaveClicked())
+    this.detectButton.addEventListener('click', _ => this.onDetectClicked())
+  }
+
+  onClearClicked() {
+    this.runicCanvas.clear()
   }
 
   onSaveClicked() {
@@ -45,8 +51,24 @@ class App {
       })
   }
 
-  onClearClicked() {
-    this.runicCanvas.clear()
+  onDetectClicked() {
+    this.runicCanvas.fetchResults()
+      .then(alphaMatrix => {
+        return fetch('/rune/detect', {
+          method: 'POST',
+          headers: {
+            "Content-Type": "application/json; charset=utf-8"
+          },
+          body: JSON.stringify({
+            data: alphaMatrix
+          })
+        })
+      })
+      .then(response => response.json())
+      .then(data => {
+        console.log(data)
+        this.randomRune.runeName = data.rune
+      })
   }
 }
 
@@ -79,8 +101,18 @@ class RandomRune {
     return this.runes[this.currentRune].rune
   }
 
+  set rune(rune) {
+    this.currentRune = this.runes.findIndex(entry => entry.rune === rune)
+    this.runicElement.innerHTML = this.rune
+  }
+
   get runeName() {
     return this.runes[this.currentRune].name
+  }
+
+  set runeName(runeName) {
+    this.currentRune = this.runes.findIndex(entry => entry.name === runeName)
+    this.runicElement.innerHTML = this.rune
   }
 
   randomize() {
