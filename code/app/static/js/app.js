@@ -12,32 +12,27 @@ class RunicViewController {
   constructor() {
     this.adapter = new RunicAdapter()
 
-    this.saveButton = document.getElementById('save')
-    this.clearButton = document.getElementById('clear')
-    this.detectButton = document.getElementById('detect')
+    this.saveButton = new Button('save')
+    this.clearButton = new Button('clear')
+    this.detectButton = new Button('detect')
 
-    this.saveButton.addEventListener('click', _ => this.onSaveClicked())
-    this.clearButton.addEventListener('click', _ => this.onClearClicked())
-    this.detectButton.addEventListener('click', _ => this.onDetectClicked())
+    this.runeToDraw = new RunicDisplay('runeToDraw')
+    this.detectedRune = new RunicDisplay('detectedRune')
 
-    let drawingCanvas = document.getElementById('canvas')
-    let scalingCanvas = document.getElementById('otherCanvas')
-    let runeToDrawElement = document.getElementById('runeToDraw')
-    let detectedRuneElement = document.getElementById('detectedRune')
+    this.runicCanvas = new RunicCanvas('drawingCanvas', 'scalingCanvas')
 
-    this.runicCanvas = new RunicCanvas(drawingCanvas, scalingCanvas)
-    this.runeToDraw = new RunicDisplay(runeToDrawElement)
-    this.detectedRune = new RunicDisplay(detectedRuneElement)
+    this.saveButton.onClick(() => this.onSaveClicked())
+    this.clearButton.onClick(() => this.onClearClicked())
+    this.detectButton.onClick(() => this.onDetectClicked())
 
     this.runeToDraw.randomRune()
   }
 
   onSaveClicked() {
     let runeName = this.runeToDraw.runeName
-    this.runicCanvas.fetchResults()
+    this.runicCanvas.fetchImageData()
       .then(imageData => this.adapter.saveRune(runeName, imageData))
       .then(data => {
-        console.log(data)
         this.runicCanvas.clear()
         this.runeToDraw.randomize()
       })
@@ -48,12 +43,21 @@ class RunicViewController {
   }
 
   onDetectClicked() {
-    this.runicCanvas.fetchResults()
+    this.runicCanvas.fetchImageData()
       .then(imageData => this.adapter.detectRune(imageData))
       .then(data => {
-        console.log(data)
         this.detectedRune.runeName = data.rune
       })
+  }
+}
+
+class Button {
+  constructor(id) {
+    this.button = document.getElementById(id)
+  }
+
+  onClick(handler) {
+    this.button.addEventListener('click', handler)
   }
 }
 
@@ -76,8 +80,8 @@ class RunicAdapter {
 }
 
 class RunicDisplay {
-  constructor(runicElement) {
-    this.runicElement = runicElement
+  constructor(id) {
+    this.runicElement = document.getElementById(id)
   }
 
   get rune() {
@@ -102,12 +106,13 @@ class RunicDisplay {
 }
 
 class RunicCanvas {
-  constructor(drawingCanvas, scalingCanvas) {
-    this.drawingCanvas = drawingCanvas
+  constructor(drawingCanvasId, scalingCanvasId) {
+    this.drawingCanvas = document.getElementById(drawingCanvasId)
     this.drawingContext = drawingCanvas.getContext('2d')
     this.drawingContext.lineWidth = 20
     this.drawingContext.lineCap = 'round'
 
+    this.scalingCanvas = document.getElementById(scalingCanvasId)
     this.scalingContext = scalingCanvas.getContext('2d')
     this.scalingContext.scale(0.1, 0.1);
 
@@ -162,7 +167,7 @@ class RunicCanvas {
     this.scalingContext.clearRect(0, 0, 240, 240)
   }
 
-  fetchResults() {
+  fetchImageData() {
     return this.fetchScaledImageData()
       .then(scaledImageData => {
         let rawData = [...scaledImageData.data]
