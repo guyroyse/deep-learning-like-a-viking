@@ -17,6 +17,7 @@ K.set_image_dim_ordering('th')
 (X_train, y_train), (X_test, y_test) = mnist.load_data()
 
 print(X_train.shape)
+print(y_train.shape)
 
 import matplotlib
 matplotlib.use('MacOSX')
