@@ -9,7 +9,7 @@ class App {
   }
 
   bindElements() {
-    this.runicElement = document.getElementById('rune')
+    this.runicElement = document.getElementById('runeToDraw')
     this.drawingCanvas = document.getElementById('canvas')
     this.scalingCanvas = document.getElementById('otherCanvas')
     this.clearButton = document.getElementById('clear')

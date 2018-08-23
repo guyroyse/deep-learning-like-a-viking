@@ -14,28 +14,24 @@ main {
   display: flex;
 }
 
-main p {
+main > p {
   width: 240px;
   margin: auto 0px;
   font-size: 24px;
 }
 
-main p:first-child {
+main > p:first-child {
   text-align: right;
 }
 
-main p:last-child {
+main > p:last-child {
   text-align: left;
 }
 
-#canvasBorder {
+.canvasBorder {
   border: 2px solid black;
   height: 240px;
   width: 240px;
-}
-
-#otherCanvas {
-  display: none;
 }
 
 .rune {
@@ -47,12 +43,11 @@ main p:last-child {
   margin: auto 50px;
 }
 
-#buttons {
-  text-align: center;
+.buttons {
   margin-top: 12px;
 }
 
-#buttons button {
+button {
   font-size: 24px;
   margin: 20px 10px;
   width: 125px;
@@ -73,3 +68,6 @@ td {
   width: 90px;
 }
 
+#otherCanvas {
+  display: none;
+}
