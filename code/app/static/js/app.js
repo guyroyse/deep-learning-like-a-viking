@@ -4,126 +4,101 @@ class App {
   }
 
   onDocumentLoaded() {
-    this.bindElements()
-    this.bindEvents()
+    this.viewController = new RunicViewController()
   }
+}
 
-  bindElements() {
-    this.runicElement = document.getElementById('runeToDraw')
-    this.drawingCanvas = document.getElementById('canvas')
-    this.scalingCanvas = document.getElementById('otherCanvas')
-    this.clearButton = document.getElementById('clear')
+class RunicViewController {
+  constructor() {
+    this.adapter = new RunicAdapter()
+
     this.saveButton = document.getElementById('save')
+    this.clearButton = document.getElementById('clear')
     this.detectButton = document.getElementById('detect')
-    this.runicCanvas = new RunicCanvas(this.drawingCanvas, this.scalingCanvas)
-    this.randomRune = new RandomRune(this.runicElement)
+
+    this.saveButton.addEventListener('click', _ => this.onSaveClicked())
+    this.clearButton.addEventListener('click', _ => this.onClearClicked())
+    this.detectButton.addEventListener('click', _ => this.onDetectClicked())
+
+    let drawingCanvas = document.getElementById('canvas')
+    let scalingCanvas = document.getElementById('otherCanvas')
+    let runeToDrawElement = document.getElementById('runeToDraw')
+    let detectedRuneElement = document.getElementById('detectedRune')
+
+    this.runicCanvas = new RunicCanvas(drawingCanvas, scalingCanvas)
+    this.runeToDraw = new RunicDisplay(runeToDrawElement)
+    this.detectedRune = new RunicDisplay(detectedRuneElement)
+
+    this.runeToDraw.randomRune()
   }
 
-  bindEvents() {
-    this.clearButton.addEventListener('click', _ => this.onClearClicked())
-    this.saveButton.addEventListener('click', _ => this.onSaveClicked())
-    this.detectButton.addEventListener('click', _ => this.onDetectClicked())
+  onSaveClicked() {
+    let runeName = this.runeToDraw.runeName
+    this.runicCanvas.fetchResults()
+      .then(imageData => this.adapter.saveRune(runeName, imageData))
+      .then(data => {
+        console.log(data)
+        this.runicCanvas.clear()
+        this.runeToDraw.randomize()
+      })
   }
 
   onClearClicked() {
     this.runicCanvas.clear()
   }
 
-  onSaveClicked() {
-    this.runicCanvas.fetchResults()
-      .then(alphaMatrix => {
-        return fetch('/rune/save', {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json; charset=utf-8"
-          },
-          body: JSON.stringify({
-            rune: this.randomRune.runeName,
-            data: alphaMatrix
-          })
-        })
-      })
-      .then(response => response.json())
-      .then(data => {
-        console.log(data)
-        this.runicCanvas.clear()
-        this.randomRune.randomize()
-      })
-  }
-
   onDetectClicked() {
     this.runicCanvas.fetchResults()
-      .then(alphaMatrix => {
-        return fetch('/rune/detect', {
-          method: 'POST',
-          headers: {
-            "Content-Type": "application/json; charset=utf-8"
-          },
-          body: JSON.stringify({
-            data: alphaMatrix
-          })
-        })
-      })
-      .then(response => response.json())
+      .then(imageData => this.adapter.detectRune(imageData))
       .then(data => {
         console.log(data)
-        this.randomRune.runeName = data.rune
+        this.detectedRune.runeName = data.rune
       })
   }
 }
 
-class RandomRune {
+class RunicAdapter {
+  saveRune(rune, data) {
+    return fetch('/rune/save', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({ rune, data })
+    }).then(response => response.json())
+  }
+
+  detectRune(data) {
+    return fetch('/rune/detect', {
+      method: 'POST',
+      headers: { "Content-Type": "application/json; charset=utf-8" },
+      body: JSON.stringify({ data })
+    }).then(response => response.json())
+  }
+}
+
+class RunicDisplay {
   constructor(runicElement) {
     this.runicElement = runicElement
-    this.runes = [
-      { rune: "ᚠ", name: "fe" },
-      { rune: "ᚢ", name: "ur" },
-      { rune: "ᚦ", name: "thurs" },
-      { rune: "ᚬ", name: "as" },
-      { rune: "ᚱ", name: "reith" },
-      { rune: "ᚴ", name: "kaun" },
-      { rune: "ᚼ", name: "hagall" },
-      { rune: "ᚾ", name: "nauthr" },
-      { rune: "ᛁ", name: "isa" },
-      { rune: "ᛅ", name: "ar" },
-      { rune: "ᛋ", name: "sol" },
-      { rune: "ᛏ", name: "tyr" },
-      { rune: "ᛒ", name: "bjork" },
-      { rune: "ᛘ", name: "mathr" },
-      { rune: "ᛚ", name: "logr" },
-      { rune: "ᛦ", name: "yr" }
-    ]
-
-    this.randomize()
   }
 
   get rune() {
-    return this.runes[this.currentRune].rune
+    return this.runicElement.innerHTML
   }
 
   set rune(rune) {
-    this.currentRune = this.runes.findIndex(entry => entry.rune === rune)
-    this.runicElement.innerHTML = this.rune
+    this.runicElement.innerHTML = rune
   }
 
   get runeName() {
-    return this.runes[this.currentRune].name
+    return runes.nameForRune(this.rune)
   }
 
   set runeName(runeName) {
-    this.currentRune = this.runes.findIndex(entry => entry.name === runeName)
-    this.runicElement.innerHTML = this.rune
+    this.rune = runes.runeForName(runeName)
   }
 
-  randomize() {
-    this.currentRune = this.getRandomInt(16)
-    this.runicElement.innerHTML = this.rune
+  randomRune() {
+    this.rune = runes.randomRune()
   }
-
-  getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max))
-  }
-
 }
 
 class RunicCanvas {
@@ -226,3 +201,45 @@ class RunicCanvas {
       })
   }
 }
+
+let runes = (function() {
+
+  let runesAndNames = [
+    { rune: "ᚠ", name: "fe" },
+    { rune: "ᚢ", name: "ur" },
+    { rune: "ᚦ", name: "thurs" },
+    { rune: "ᚬ", name: "as" },
+    { rune: "ᚱ", name: "reith" },
+    { rune: "ᚴ", name: "kaun" },
+    { rune: "ᚼ", name: "hagall" },
+    { rune: "ᚾ", name: "nauthr" },
+    { rune: "ᛁ", name: "isa" },
+    { rune: "ᛅ", name: "ar" },
+    { rune: "ᛋ", name: "sol" },
+    { rune: "ᛏ", name: "tyr" },
+    { rune: "ᛒ", name: "bjork" },
+    { rune: "ᛘ", name: "mathr" },
+    { rune: "ᛚ", name: "logr" },
+    { rune: "ᛦ", name: "yr" }
+  ]
+
+  function runeForName(name) {
+    return runesAndNames.find(entry => entry.name === name).rune
+  }
+
+  function nameForRune(rune) {
+    return runesAndNames.find(entry => entry.rune === rune).name
+  }
+
+  function randomRune() {
+    let index = getRandomInt(runesAndNames.length)
+    return runesAndNames[index].rune
+  }
+
+  function getRandomInt(max) {
+    return Math.floor(Math.random() * Math.floor(16))
+  }
+
+  return { runeForName, nameForRune, randomRune }
+
+})()
