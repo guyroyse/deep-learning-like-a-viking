@@ -1,11 +1,31 @@
 body {
-  max-width: 244px;
-  margin: auto;
-  margin-top: 50px;
+  margin-top: 20px;
+  font-family: Roboto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 h1 {
   text-align: center;
+}
+
+main {
+  display: flex;
+}
+
+main p {
+  width: 240px;
+  margin: auto 0px;
+  font-size: 24px;
+}
+
+main p:first-child {
+  text-align: right;
+}
+
+main p:last-child {
+  text-align: left;
 }
 
 #canvasBorder {
@@ -18,20 +38,38 @@ h1 {
   display: none;
 }
 
-#rune {
+.rune {
   border: 2px solid black;
-  width: 240px;
+  min-width: 55px;
+  height: 65px;
   text-align: center;
   font-size: 48px;
-  margin-bottom: 12px;
+  margin: auto 50px;
 }
 
 #buttons {
-  width: 240px;
   text-align: center;
   margin-top: 12px;
 }
 
 #buttons button {
-  font-size: 18px;
+  font-size: 24px;
+  margin: 20px 10px;
+  width: 125px;
 }
+
+table {
+  margin-top: 25px;
+  font-size: 24px;
+}
+
+th {
+  width: 50px;
+  border: 2px solid black;
+}
+
+td {
+  padding-left: 10px;
+  width: 90px;
+}
+
