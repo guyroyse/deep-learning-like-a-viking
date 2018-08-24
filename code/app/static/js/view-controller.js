@@ -24,7 +24,7 @@ class RunicViewController {
       .then(imageData => this.model.save(rune, imageData))
       .then(() => {
         this.runicCanvas.clear()
-        this.runeToDraw.rune = this.adapter.randomRune()
+        this.runeToDraw.rune = this.model.randomRune()
       })
   }
 
