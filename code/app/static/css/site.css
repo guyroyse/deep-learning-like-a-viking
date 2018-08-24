@@ -68,6 +68,6 @@ td {
   width: 90px;
 }
 
-#otherCanvas {
-  display: none;
+#scalingCanvas {
+  /* display: none; */
 }
