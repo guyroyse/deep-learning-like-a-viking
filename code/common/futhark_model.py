@@ -36,7 +36,7 @@ class FutharkModel:
 
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    model.fit(X_train, Y_train, batch_size=32, epochs=10, verbose=1)
+    model.fit(X_train, Y_train, batch_size=32, epochs=50, verbose=1)
 
     self.__model = model
 
