@@ -10,17 +10,29 @@ labels = FutharkLabels()
 
 X, y = [], []
 
+print()
+print("Loading runic JSON files...")
+
 for filename in os.listdir('data'):
   file = RuneFile.from_file(f'data/{filename}')
   X.append(file.rune_data)
   y.append(file.rune_name)
+  print(f"  ...'{file.rune_name}' from {filename}")
 
 X = np.array(X)
 y = np.array(y)
 
 y = labels.encode(y)
 
+print()
+print("Building model...")
+
 score = model.build(X, y)
 model.save()
 
-print(score)
+print()
+print("Modeled saved")
+print()
+
+print("Model Score:", score)
+print()
