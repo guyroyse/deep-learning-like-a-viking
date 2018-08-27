@@ -5,6 +5,9 @@ from common.rune_file import RuneFile
 from common.futhark_model import FutharkModel
 from common.futhark_labels import FutharkLabels
 
+model = FutharkModel()
+labels = FutharkLabels()
+
 X, y = [], []
 
 for filename in os.listdir('data'):
@@ -15,10 +18,8 @@ for filename in os.listdir('data'):
 X = np.array(X)
 y = np.array(y)
 
-labels = FutharkLabels()
 y = labels.encode(y)
 
-model = FutharkModel()
 score = model.build(X, y)
 model.save()
 
