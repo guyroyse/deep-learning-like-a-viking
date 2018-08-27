@@ -16,16 +16,14 @@ K.set_image_dim_ordering('th')
 from sklearn.model_selection import train_test_split
 from sklearn.preprocessing import LabelEncoder
 
+from common.rune_file import RuneFile
+
 X, y = [], []
 
-for filename in os.listdir('../data'):
-  with open(f'../data/{filename}') as file:
-    data = json.load(file)
-    X_item = np.array(data['data'])
-    X_item = X_item.reshape(1, 24, 24)
-    y_item = data['rune']
-    X.append(X_item)
-    y.append(y_item)
+for filename in os.listdir('data'):
+  file = RuneFile.from_file(f'data/{filename}')
+  X.append(file.rune_data)
+  y.append(file.rune_name)
 
 X = np.array(X)
 y = np.array(y)

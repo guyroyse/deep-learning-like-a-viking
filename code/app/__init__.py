@@ -6,11 +6,6 @@ from . import rune
 def create_app(test_config=None):
   app = Flask(__name__, instance_relative_config=True)
 
-  try:
-    os.makedirs('data')
-  except OSError:
-    pass
-
   @app.route('/')
   def index():
     return send_from_directory('static', 'index.html')
