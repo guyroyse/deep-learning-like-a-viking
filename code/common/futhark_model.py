@@ -3,7 +3,7 @@ os.environ['KERAS_BACKEND'] = 'theano'
 
 import numpy as np
 
-from keras.models import Sequential
+from keras.models import Sequential, model_from_json
 from keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
 from keras.utils import np_utils
 from keras import backend as K
@@ -44,12 +44,17 @@ class FutharkModel:
 
   def save(self):
     model_json = self.__model.to_json()
-    with open("model/futhark_model.json", "w") as json_file:
+    with open('model/futhark_model.json', 'w') as json_file:
       json_file.write(model_json)
-    self.__model.save_weights("model/futhark_model.h5")
+    self.__model.save_weights('model/futhark_model.h5')
 
   def load(self):
-    return 0
+    with open('model/futhark_model.json', 'r') as json_file:
+      model_json = json_file.read()
+      json_file.close()
 
-  def predict(self):
-    return 0
+    self.__model = model_from_json(model_json)
+    self.__model.load_weights('model/futhark_model.h5')
+
+  def predict(self, X):
+    return self.__model.predict_classes(X)
