@@ -1,11 +1,10 @@
 import functools
 import numpy as np
 
-from sklearn.preprocessing import LabelEncoder
-
 from uuid import uuid4
 from common.rune_file import RuneFile
 from common.futhark_model import FutharkModel
+from common.futhark_labels import FutharkLabels
 
 from flask import Blueprint, g, request, jsonify
 
@@ -27,16 +26,11 @@ def detect_rune():
   X = np.array(rune_data['data'])
   X = X.reshape(1, 1, 24, 24)
 
-  label_encoder = LabelEncoder()
-  label_encoder.fit(["fe", "ur", "thurs", "as", "reith", "kaun", "hagall", "nauthr", "isa", "ar", "sol", "tyr", "bjork", "mathr", "logr", "yr"])
-
   model = FutharkModel()
   model.load()
-
   y = model.predict(X)
-  result = label_encoder.inverse_transform(y)
 
-  print(y)
-  print(result)
+  labels = FutharkLabels()
+  result = labels.decode(y)
 
   return jsonify(message="OK", rune=result[0])
