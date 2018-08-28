@@ -27,16 +27,16 @@ Once ```venv``` is installed, you need to activate it:
 
     $ . venv/bin/activate
 
-Now, when you run ```python``` from the command line, it will always
+Now when you run ```python``` from the command line, it will always
 point to Python3.7 and any libraries you install will only be for
 this specific environment.
 
-If you want to deactivate this environment, you can at any time from
+If you want to deactivate this environment, you can do so from
 anywhere with the following command:
 
     $ deactivate
 
-Now, let's install all the requirements. These are all listed in
+Next, let's install all the requirements. These are all listed in
 ```requirements.txt``` and can be installed with ```pip``` like this.
 
     $ pip install -r requirements.txt
@@ -55,18 +55,18 @@ folder. You are free to use them, of course, but you might want to
 enter some runes of your own.
 
 Why? Well, the runes I entered are written in my hand and so the model
-they build will be great a recognizing my hand writing but perhaps not
-yours. Plus, I'd love to have some extra runes for my repository so if
+they build will be great at recognizing my hand writing but perhaps not
+yours. Plus, I'd love to have some extra runes for my repository. So, if
 you wanted to create a few and send me a pull request, that would be
 super-awesome!
 
-So enter your own runes, simple start the Flask application be running
+To enter your own runes, simple start the Flask application by running
 the ```run.sh``` script.
 
     $ ./run.sh
 
 This will start a web server listening or port 5000. Navigate to
-http://localhost:5000 and on the left you will see a run. Draw that
+http://localhost:5000 and on the left you will see a rune. Draw that
 rune. If you mess up, hit the **Clear** button. If you're happy with
 it, hit the **Save** button. When you save it, it will write out a
 new JSON file to the ```data``` folder, clear the drawing canvas,
@@ -82,7 +82,7 @@ application. However, it does result in the ability to hot swap the
 model while the server is running. Useful if you're playing around,
 which we are.
 
-To build the model, simply run build_model.py:
+To build the model, simply run ```build_model.py```:
 
      $ python build_model.py
 
@@ -100,7 +100,7 @@ the accuracy.
 
 Once you've got a model, you can start using it. The Flask application
 that let you enter runes is the same application you can use to detect
-them. So, start it up again if isn't already running:
+them. Start it up again if isn't already running:
 
     $ ./run.sh
 
