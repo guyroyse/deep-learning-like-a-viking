@@ -26,17 +26,17 @@ class FutharkModel:
 
     model = Sequential()
     model.add(Conv2D(48, (3, 3), activation='relu', input_shape=(1, 24, 24)))
-    model.add(Conv2D(48, (3, 3), activation='relu'))
+    model.add(Conv2D(24, (3, 3), activation='relu'))
+    model.add(Conv2D(12, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2,2)))
     model.add(Dropout(0.25))
     model.add(Flatten())
     model.add(Dense(128, activation='relu'))
-    model.add(Dropout(0.5))
     model.add(Dense(16, activation='softmax'))
 
     model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accuracy'])
 
-    model.fit(X_train, Y_train, batch_size=32, epochs=50, verbose=1)
+    model.fit(X_train, Y_train, batch_size=32, epochs=40, verbose=1)
 
     self.__model = model
 
