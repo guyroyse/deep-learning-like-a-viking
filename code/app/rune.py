@@ -30,8 +30,8 @@ def detect_rune():
   file = RuneFile.from_json(request.get_json())
   rune_data = file.rune_data
   encoded_rune = model.predict(rune_data)
-  rune = labels.decode(encoded_rune)
+  rune = labels.decode([encoded_rune])
 
   print(f"Detected rune of '{encoded_rune}' decodes to '{rune}'")
 
-  return jsonify(message="OK", rune=rune)
+  return jsonify(message="OK", rune=rune[0])
