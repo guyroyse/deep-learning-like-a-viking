@@ -1,9 +1,9 @@
 import os
 import numpy as np
 
-from common.rune_file import RuneFile
-from common.futhark_model import FutharkModel
-from common.futhark_labels import FutharkLabels
+from rune_data import RuneData
+from futhark_model import FutharkModel
+from futhark_labels import FutharkLabels
 
 model = FutharkModel()
 labels = FutharkLabels()
@@ -14,10 +14,10 @@ print()
 print("Loading runic JSON files...")
 
 for filename in os.listdir('data'):
-  file = RuneFile.from_file(f'data/{filename}')
-  X.append(file.rune_data)
-  y.append(file.rune_name)
-  print(f"  ...'{file.rune_name}' from {filename}")
+  rune = RuneData.from_file(f'data/{filename}')
+  X.append(rune.image_data)
+  y.append(rune.rune_name)
+  print(f"  ...'{rune.rune_name}' from {filename}")
 
 X = np.array(X)
 y = np.array(y)

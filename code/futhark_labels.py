@@ -15,3 +15,6 @@ class FutharkLabels:
 
   def decode(self, y):
     return self.__encoder.inverse_transform(y)
+
+  def decode_one(self, y):
+    return self.__encoder.inverse_transform([y])[0]

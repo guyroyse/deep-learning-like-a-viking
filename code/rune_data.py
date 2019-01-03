@@ -1,7 +1,7 @@
 import json
 import numpy as np
 
-class RuneFile:
+class RuneData:
 
   def __init__(self, json_data):
     self.__json_data = json_data
@@ -22,7 +22,7 @@ class RuneFile:
     return self.__json_data['rune']
 
   @property
-  def rune_data(self):
+  def image_data(self):
     return np.array(self.__json_data['data']).reshape(1, 24, 24)
 
   def save(self, filename):

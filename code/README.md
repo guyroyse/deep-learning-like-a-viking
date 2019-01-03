@@ -60,10 +60,9 @@ yours. Plus, I'd love to have some extra runes for my repository. So, if
 you wanted to create a few and send me a pull request, that would be
 super-awesome!
 
-To enter your own runes, simple start the Flask application by running
-the ```run.sh``` script.
+To enter your own runes, simple start the Flask application.
 
-    $ ./run.sh
+    $ python app.py
 
 This will start a web server listening or port 5000. Navigate to
 http://localhost:5000 and on the left you will see a rune. Draw that
@@ -102,7 +101,7 @@ Once you've got a model, you can start using it. The Flask application
 that let you enter runes is the same application you can use to detect
 them. Start it up again if isn't already running:
 
-    $ ./run.sh
+    $ python app.py
 
 Now, pick a rune from the 16 at the bottom and draw it on the drawing
 canvas. If you mess it up, hit the **Clear** button and redraw it.

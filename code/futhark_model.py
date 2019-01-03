@@ -56,4 +56,7 @@ class FutharkModel:
     self.__model.load_weights('model/futhark_model.h5')
 
   def predict(self, X):
+    return self.__model.predict_classes(X)
+
+  def predict_one(self, X):
     return self.__model.predict_classes(X.reshape(1, 1, 24, 24))[0]
