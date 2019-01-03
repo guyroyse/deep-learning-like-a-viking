@@ -1,5 +1,4 @@
-# Deep Learning like a Viking
-## Building Convolutional Neural Networks with Keras
+# Deep Learning like a Viking: Building Convolutional Neural Networks with Keras
 
 The Vikings came from the land of ice and snow, from the midnight sun, where the hot springs flow. In addition to longships and bad attitudes, they had a system of writing that we, in modern times, have dubbed the Younger Futhark (or ᚠᚢᚦᚬᚱᚴ if you're a Viking). These sigils are more commonly called runes and have been mimicked in fantasy literature and role-playing games for decades.
 
