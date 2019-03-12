@@ -1,13 +1,8 @@
-import os
-os.environ['KERAS_BACKEND'] = 'theano'
-
 import numpy as np
 
 from keras.models import Sequential, model_from_json
 from keras.layers import Dense, Dropout, Activation, Flatten, Conv2D, MaxPooling2D
 from keras.utils import np_utils
-from keras import backend as K
-K.set_image_dim_ordering('th')
 
 from sklearn.model_selection import train_test_split
 
@@ -25,7 +20,7 @@ class FutharkModel:
     Y_test = np_utils.to_categorical(y_test, 16)
 
     model = Sequential()
-    model.add(Conv2D(48, (3, 3), activation='relu', input_shape=(1, 24, 24)))
+    model.add(Conv2D(48, (3, 3), activation='relu', data_format='channels_first', input_shape=(1, 24, 24)))
     model.add(MaxPooling2D(pool_size=(2,2)))
     model.add(Conv2D(24, (3, 3), activation='relu'))
     model.add(MaxPooling2D(pool_size=(2,2)))
