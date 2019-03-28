@@ -40,20 +40,22 @@ print()
 # convert X and y to numpy arrays
 X, y = np.array(X), np.array(y)
 
-# create an encoder for the labels...
+# scale the image data from 0...255 to 0.0...1.0
+X = X.astype('float32')
+X /= 255
+
+# create an encoder for the labels
 encoder = LabelEncoder()
 encoder.fit([
   "fe", "ur", "thurs", "as", "reith", "kaun", "hagall", "nauthr",
   "isa", "ar", "sol", "tyr", "bjork", "mathr", "logr", "yr"
 ])
 
-# ...and encode the labels
+# convert the labels from strings to numbers
 y = encoder.transform(y)
-Y = np_utils.to_categorical(y, 16)
 
-# scale the image data from 0...255 to 0.0...1.0
-X = X.astype('float32')
-X /= 255
+# convert the labels from numbers to one-hot encoding
+Y = np_utils.to_categorical(y, 16)
 
 # split for train and test
 X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
