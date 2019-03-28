@@ -1,7 +1,5 @@
 import os
-
 import json
-
 import numpy as np
 
 from sklearn.model_selection import train_test_split
@@ -77,9 +75,14 @@ model.compile(loss='categorical_crossentropy', optimizer='adam', metrics=['accur
 model.fit(X_train, Y_train, batch_size=32, epochs=20, verbose=1)
 
 # evaluate it
+print()
 print(model.evaluate(X_test, Y_test, verbose=0))
+print()
 
 # save it
 model.save_weights('futhark_model.h5')
 with open('futhark_model.json', 'w') as file:
   file.write(model.to_json())
+
+print("Saved model to 'futhark_model.json' and 'futhark_model.h5'")
+print()
