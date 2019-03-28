@@ -11,4 +11,8 @@ class RuneDisplayer {
     this._rune = rune
     this.element.innerHTML = rune.glyph
   }
+
+  clear() {
+    this.rune =  { glyph: "", name: "" }
+  }
 }

@@ -30,6 +30,7 @@ class RunicViewController {
 
   onClearClicked() {
     this.runicCanvas.clear()
+    this.detectedRune.clear()
   }
 
   onDetectClicked() {
