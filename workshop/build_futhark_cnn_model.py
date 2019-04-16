@@ -16,8 +16,8 @@ print()
 print("Loading runic JSON files...")
 
 # loop over all the data files
-for filename in os.listdir('runes'):
-  with open(f'runes/{filename}') as file:
+for filename in os.listdir('data/runes'):
+  with open(f'data/runes/{filename}') as file:
 
     # parse the JSON within
     json_data = json.load(file)
@@ -80,8 +80,8 @@ print(model.evaluate(X_test, Y_test, verbose=0))
 print()
 
 # save it
-model.save_weights('futhark_model.h5')
-with open('futhark_model.json', 'w') as file:
+model.save_weights('models/futhark_cnn_model.h5')
+with open('models/futhark_cnn_model.json', 'w') as file:
   file.write(model.to_json())
 
 print("Saved model to 'futhark_model.json' and 'futhark_model.h5'")
