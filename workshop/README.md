@@ -27,6 +27,7 @@ And then install our dependencies.
     $ conda install keras
     $ conda install scikit-learn
     $ conda install flask
+    $ conda install pandas
 
 So far so good.
 

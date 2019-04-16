@@ -84,5 +84,5 @@ model.save_weights('models/futhark_cnn_model.h5')
 with open('models/futhark_cnn_model.json', 'w') as file:
   file.write(model.to_json())
 
-print("Saved model to 'futhark_model.json' and 'futhark_model.h5'")
+print("Saved model to 'models/futhark_cnn_model.json' and 'models/futhark__cnn_model.h5'")
 print()
