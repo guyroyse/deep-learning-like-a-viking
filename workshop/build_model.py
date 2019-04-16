@@ -16,8 +16,8 @@ print()
 print("Loading runic JSON files...")
 
 # loop over all the data files
-for filename in os.listdir('../code/data'):
-  with open(f'../code/data/{filename}') as file:
+for filename in os.listdir('data'):
+  with open(f'data/{filename}') as file:
 
     # parse the JSON within
     json_data = json.load(file)
