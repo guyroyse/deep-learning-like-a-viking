@@ -55,13 +55,5 @@ model.save_weights('models/cmos_gate_model.h5')
 with open('models/cmos_gate_model.json', 'w') as file:
   file.write(model.to_json())
 
-print("Saved model to 'cmos_gate_model.json' and 'cmos_gate_model.h5'")
+print("Saved model to 'models/cmos_gate_model.h5' and 'models/cmos_gate_model.json'")
 print()
-
-print(X_test[:10])
-
-results = model.predict_classes(X_test[:10])
-
-labels = encoder.inverse_transform(results)
-
-print(labels)
