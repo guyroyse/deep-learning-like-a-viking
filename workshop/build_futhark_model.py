@@ -60,10 +60,7 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 
 # configure the neural network
 model = Sequential()
-model.add(Conv2D(48, (3, 3), activation='relu', data_format='channels_first', input_shape=(1, 24, 24)))
-model.add(MaxPooling2D(pool_size=(2,2)))
-model.add(Conv2D(24, (3, 3), activation='relu'))
-model.add(MaxPooling2D(pool_size=(2,2)))
+model.add(Dense(48, input_shape=(1, 24, 24), activation='relu'))
 model.add(Flatten())
 model.add(Dense(128, activation='relu'))
 model.add(Dense(16, activation='softmax'))
@@ -80,9 +77,9 @@ print(model.evaluate(X_test, Y_test, verbose=0))
 print()
 
 # save it
-model.save_weights('models/futhark_cnn_model.h5')
-with open('models/futhark_cnn_model.json', 'w') as file:
+model.save_weights('models/futhark_model.h5')
+with open('models/futhark_model.json', 'w') as file:
   file.write(model.to_json())
 
-print("Saved model to 'models/futhark_cnn_model.json' and 'models/futhark_cnn_model.h5'")
+print("Saved model to 'models/futhark_model.json' and 'models/futhark_model.h5'")
 print()

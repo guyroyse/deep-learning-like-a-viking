@@ -31,7 +31,7 @@ y = encoder.transform(y)
 Y = np_utils.to_categorical(y, 2)
 
 # split for train and test
-X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2, random_state=42)
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 
 # configure the neural network
 model = Sequential()
