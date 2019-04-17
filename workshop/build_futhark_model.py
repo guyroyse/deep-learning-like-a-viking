@@ -60,9 +60,8 @@ X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.2)
 
 # configure the neural network
 model = Sequential()
-model.add(Dense(48, input_shape=(1, 24, 24), activation='relu'))
+model.add(Dense(128, input_shape=(1, 24, 24), activation='relu'))
 model.add(Flatten())
-model.add(Dense(128, activation='relu'))
 model.add(Dense(16, activation='softmax'))
 
 # compile the model
