@@ -23,12 +23,13 @@ encoder.fit([True, False])
 
 # try out the model
 input_voltages = np.array([[0.0, 0.0], [5.0, 5.0], [0.5, 4.5], [4.5, 0.5], [2.5, 2.5]])
-results = model.predict_classes(input_voltages)
-result_labels = encoder.inverse_transform(results)
+results = model.predict(input_voltages)
+result_classes = model.predict_classes(input_voltages)
+result_labels = encoder.inverse_transform(result_classes)
 
 # print the results
 print("V1\tV2\tResult")
 for i in range(len(input_voltages)):
-  print(f"{input_voltages[i][0]}\t{input_voltages[i][1]}\t{result_labels[i]}")
+  print(f"{input_voltages[i][0]}\t{input_voltages[i][1]}\t{result_labels[i]}\t{result_labels[0]}: {results[i][0]}\t{result_labels[1]}: {results[i][1]}")
 
 print()

@@ -1,5 +1,4 @@
 import pandas as pd
-
 import numpy as np
 
 from sklearn.model_selection import train_test_split
@@ -12,7 +11,7 @@ from keras.utils import np_utils
 # x holds the voltages, y holds the labels
 x, y = [], []
 
-# read the dat from the CSV
+# read the data from the CSV
 data = pd.read_csv('data/cmos/cmos-gate.csv', encoding='utf-8')
 X = data.filter(items=['input_voltage_1','input_voltage_2'])
 y = data.filter(items=['output_value'])
