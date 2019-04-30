@@ -30,6 +30,12 @@ result_labels = encoder.inverse_transform(result_classes)
 # print the results
 print("V1\tV2\tResult")
 for i in range(len(input_voltages)):
-  print(f"{input_voltages[i][0]}\t{input_voltages[i][1]}\t{result_labels[i]}\t{result_labels[0]}: {results[i][0]}\t{result_labels[1]}: {results[i][1]}")
-
-print()
+  print(input_voltages[i][0], end='\t')
+  print(input_voltages[i][1], end='\t')
+  print(result_labels[i], end='\t')
+  print("(", end='')
+  print(encoder.classes_[0], end=' ')
+  print(f"{results[i][0]:.12f}", end=', ')
+  print(encoder.classes_[1], end=' ')
+  print(f"{results[i][1]:.12f}", end='')
+  print(")")

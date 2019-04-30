@@ -80,9 +80,14 @@ input_runes = np.array([
   ]]
 ])
 
-runes = model.predict_classes(input_runes)
-rune_labels = encoder.inverse_transform(runes)
+runes = model.predict(input_runes)
+rune_classes = model.predict_classes(input_runes)
+rune_labels = encoder.inverse_transform(rune_classes)
 
 # print the results
-print(rune_labels)
+print("Rune\tResult")
+for i in range(len(runes)):
+  print(rune_labels[i], end='')
+  for j in range(len(runes[i])):
+    print(f"\t{encoder.classes_[j]}\t{runes[i][j]:.12f}")
 print()
