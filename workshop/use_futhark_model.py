@@ -85,9 +85,14 @@ rune_classes = model.predict_classes(input_runes)
 rune_labels = encoder.inverse_transform(rune_classes)
 
 # print the results
-print("Rune\tResult")
+expected_runes = ['isa', 'hagal']
+
 for i in range(len(runes)):
-  print(rune_labels[i], end='')
+  print(f"Input:\t{expected_runes[i]}")
+  print(f"Result:\t{rune_labels[i]}")
+  print()
   for j in range(len(runes[i])):
-    print(f"\t{encoder.classes_[j]}\t{runes[i][j]:.12f}")
+    print(f"{encoder.classes_[j]}\t{runes[i][j]:.12f}")
+  print()
+print()
 print()
