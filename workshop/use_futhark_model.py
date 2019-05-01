@@ -94,5 +94,4 @@ for i in range(len(runes)):
   for j in range(len(runes[i])):
     print(f"{encoder.classes_[j]}\t{runes[i][j]:.12f}")
   print()
-print()
-print()
+  print()
