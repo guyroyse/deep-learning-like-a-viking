@@ -33,7 +33,7 @@ And then we can activate that environment.
 
 And then install our dependencies.
 
-    $ conda install keras
+    $ conda install tensorflow
     $ conda install scikit-learn
     $ conda install flask
 
@@ -61,7 +61,7 @@ To enter your own runes, simple start the Flask application.
     $ python app.py
 
 This will start a web server listening or port 5000. Navigate to
-http://localhost:5000 and on the left you will see a rune. Draw that rune. If
+http://127.0.0.1:5000 and on the left you will see a rune. Draw that rune. If
 you mess up, hit the **Clear** button. If you're happy with it, hit the
 **Save** button. When you save it, it will write out a new JSON file to the
 `data` folder, clear the drawing canvas, and present you with a new rune to
