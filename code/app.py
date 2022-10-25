@@ -6,7 +6,7 @@ import tensorflow as tf
 
 from flask import Flask, send_from_directory, request, jsonify
 
-from keras.models import model_from_json
+from tensorflow.keras.models import model_from_json
 from sklearn.preprocessing import LabelEncoder
 
 from uuid import uuid4
@@ -14,8 +14,8 @@ from uuid import uuid4
 # the Flask app
 app = Flask(__name__, instance_relative_config=True)
 
-# model and graph need to be be global when working with TensorFlow
-global model, graph
+# make the model global so we can reuse it
+global model
 
 # load the model structure and weights for the saved off files
 with open('model/futhark_model.json', 'r') as file:
@@ -24,9 +24,6 @@ with open('model/futhark_model.json', 'r') as file:
 
 model = model_from_json(model_json)
 model.load_weights('model/futhark_model.h5')
-
-# get the graph so we can be sure to use it in the future
-graph = tf.get_default_graph()
 
 # setup the label encoder
 encoder = LabelEncoder()
@@ -77,29 +74,34 @@ def detect_rune():
 
   # convert the image to numpy for use by the model
   #
-  # NOTE: We are adding two more dimensions to the image. The first
+  # NOTE: We are adding two more dimensions to the image. The last
   # provides depth for RGB images which Keras expects. We are doing
   # the alpha channel only so we only have one dimension there. The
-  # second is that Keras expects to classify an array of images. We
+  # first is that Keras expects to classify an array of images. We
   # only want to classify one image. So, just one there as well.
-  rune_image = np.array(rune_json['data']).reshape(1, 1, 24, 24)
+  rune_image = np.array(rune_json['data']).reshape(1, 24, 24, 1)
 
-  # tell TensorFlow which graph to use and then make a prediction
+  # make a prediction, returns and array of probabilities.
   #
   # NOTE: This returns and array of predictions with only one
-  # prediction in it.
-  with graph.as_default():
-    runes = model.predict_classes(rune_image)
+  # prediction in it. We'll grab the first one
+  runes = model.predict(rune_image)[0]
+
+  # get the position of the max probabilty, that's our winner
+  rune = np.argmax(runes, axis=-1)
+
+  print("*************************")
+  print(runes, max)
 
   # decoded the predictions from a numeric labels to strings
-  rune_labels = encoder.inverse_transform(runes)
+  rune_label = encoder.inverse_transform([rune])[0]
 
   # tell everyone about it
-  print(f"Detected rune of '{runes}' decodes to '{rune_labels}'")
+  print(f"Detected rune of '{rune}' decodes to '{rune_label}'")
   print()
 
   # return just the first prediction
-  return jsonify(message="OK", rune=rune_labels[0])
+  return jsonify(message = "OK", rune = rune_label)
 
 
 

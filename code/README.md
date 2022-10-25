@@ -16,7 +16,7 @@ you shouldn't even need to access the Internet (like a Viking or not).
 
 ### Install Anaconda
 
-Download and install Anaconda for Python 3.7 from
+Download and install Anaconda for Python 3.9 from
 https://www.anaconda.com/distribution/#download-section.
 Follow the instructions there and in the installer.
 
@@ -25,7 +25,7 @@ Follow the instructions there and in the installer.
 We'll need some packages installed to make this work so let's use Anaconda for
 it's intended purpose and setup an isolated environment to install them in.
 
-    $ conda create --name viking python=3.7
+    $ conda create --name viking python=3.9
 
 And then we can activate that environment.
 
